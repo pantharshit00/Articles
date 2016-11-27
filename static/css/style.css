@@ -183,7 +183,7 @@ body {
 div.top-nav {
     width: 100%;
     background-color: black;
-    height: 32px;
+    height: 34px;
     transition: all 0.1s ease-out;
     padding-top: 5px;
 }
@@ -273,9 +273,33 @@ a.right:hover {
     }
 }
 
-ul.topnav {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+.container {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.bar1, .bar2, .bar3 {
+    width: 25px;
+    height: 3px;
+    background-color: #ffffff;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+
+.change .bar1 {
+    -webkit-transform: rotate(-45deg);;
+    transform: rotate(-45deg);
+    position: absolute;
+    top: 70px;
+}
+
+.change .bar2 {
+    opacity: 0;
+}
+
+.change .bar3 {
+    -webkit-transform: rotate(45deg);;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 70px;
 }
