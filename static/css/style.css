@@ -241,6 +241,7 @@ a.logo {
     position: relative;
     float: right;
     bottom: 10px;
+    display: inline-block;
 }
 
 a.right:hover {
