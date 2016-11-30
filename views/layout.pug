@@ -1,5 +1,4 @@
 doctype html
-//test
 html
     head
         title= title
@@ -13,14 +12,15 @@ html
         link(rel="manifest", href="/manifest.json")
         link(rel="mask-icon", href="/safari-pinned-tab.svg", color="#5bbad5")
         link(rel="stylesheet" href="/static/css/pace.css")
+        script(src="/static/js/main.js")
         meta(name="theme-color", content="#ffffff")
     body
         a.logo(href='/') Articles
         div.top-nav
             a.top.home(href="/" style="border:none!important;")
                 i.fa.fa-home
-            a.top.bars(href="#" style="border:none!important;")
-                .container(onclick='myFunction(this)')
+            a.top.bars(href="#" style="border:none!important;" class="topnav" onclick="menuFix()")
+                .container(onclick='iconFix(this)')
                     .bar1
                     .bar2
                     .bar3
@@ -31,7 +31,22 @@ html
             a.top.left(href="#") Link5
             a.top.left(href="#") Link7
             a.top.left(href="#") Link8
-            a.top.right(href="#") Sign up
-            a.top.right(href="#") Login
+            a.top.right(href="/register") Sign up
+            a.top.right(href="/login") Login
+            br
+            ul.men
+                li
+                    a.top.left(href="#") Link1
+                li
+                    a.top.left(href="#") Link2
+                li
+                    a.top.left(href="#") Link3
+                li
+                    a.top.left(href="#") Link4
+                li
+                    a.top.left(href="#") Link5
+                li
+                    a.top.left(href="#") Link7
+                li
+                    a.top.left(href="#") Link8
         block contents
-        block scripts

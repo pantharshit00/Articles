@@ -1,0 +1,19 @@
+extends layout
+
+block contents
+    h1 Login
+    br
+    form(action='/login', method='post')
+        div(align="center")
+            div
+                label
+                 h1 Username:
+                input(type='text', name='username')
+            div
+                label
+                 h1 Password:
+                input(type='password', name='password')
+            div
+                br
+                input(type='submit', value='Log In')
+

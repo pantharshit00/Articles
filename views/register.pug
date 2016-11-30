@@ -1,0 +1,19 @@
+extends layout
+
+
+block contents
+    div.card
+        div.register
+            h1(style="font-size:36px") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Register
+            form(action="/signup" method="post")
+                h2(style="padding:3px") Name
+                input(type="text" name="name" placeholder="Name" class="animate-input field")
+                h2(style="padding:3px") Email
+                input(type="email" name="email" placeholder="Email" class="animate-input field")
+                h2(style="padding:3px") Password
+                input(type="password" name="password" placeholder="Password" class="animate-input field")
+                h2(style="padding:3px") Confirm Password
+                input(type="password" name="password2" class="animate-input field" placeholder="Confirm Password")
+                br
+                br
+                input(style="padding:3px" type="submit" value="submit" class="button")

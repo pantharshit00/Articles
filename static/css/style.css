@@ -171,6 +171,14 @@ textarea {
 }
 
 /* End extract */
+
+
+
+
+
+
+
+/*start programming from here*/
 a {
     text-decoration: none !important;
 }
@@ -254,6 +262,27 @@ a.right:hover {
     display: none;
 }
 
+ul.men{
+    display: none;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000;
+}
+
+ul.men li {float: left;}
+
+ul.men li a {
+    display: inline-block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
 @media screen and (max-width: 710px) {
     .left {
         display: none;
@@ -270,6 +299,27 @@ a.right:hover {
 
     p {
         width: 100%
+    }
+    ul.men.responsive {
+        position: relative;
+        width: 100%;
+        top: -15px;
+    }
+
+    ul.men.responsive  li {
+        float: none;
+        display: inline;
+
+    }
+    ul.men.responsive li a {
+        display: block;
+        text-align: center;
+        border: none;
+        position: static;
+        font-size: 30px !important;
+    }
+    .register{
+        padding-left:2% !important;
     }
 }
 
@@ -302,4 +352,57 @@ a.right:hover {
     transform: rotate(45deg);
     position: absolute;
     top: 70px;
+}
+.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    padding: 5px 25px 8px;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+.animate-input{
+    transition:all 0.4s ease-in-out;
+}
+input.field{
+    width:300px;
+    height: 28px;
+    border-radius: 3px;
+    border: 1.5px solid #000;
+    padding: 2.5px;
+}
+
+input.button{
+    background: #000000;
+    color: #ffffff;
+    border:none !important;
+    border-radius: 3px;
+    transition: all 0.1s ease-in-out;
+    height:30px;
+    width: 75px;
+}
+input.button:hover{
+    height: 35px;
+    width: 85px;
+}
+input::-webkit-input-placeholder{
+    padding-left: 3px;
+}
+
+.animate-input:focus{
+    width:405px!important
+}
+
+.register{
+    padding-left: 33.33%;
+}
+
+@media all and (max-width:470px) {
+    .animate-input,.animate-input:focus{
+        width:90%!important;
+    }
+
 }

@@ -3,7 +3,7 @@ var morgan = require('morgan');
 var path = require('path');
 var pug = require('pug');
 var app = express();
-app.use(morgan('dev'));
+app.use(morgan('combined'));
 app.use('/static', express.static('static'));
 app.set('view engine', 'pug');
 
@@ -25,6 +25,14 @@ app.get('/:filename.svg', function (req, res) {
 
 app.get('/:filename.xml', function (req, res) {
     res.sendFile(path.join(__dirname, req.params.filename + '.xml'));
+});
+
+app.get('/login', function(req,res){
+   res.render('login',{title: "Login | Articles"});
+});
+
+app.get('/register',function(req,res){
+   res.render('register',{title:"Sign Up | Articles"});
 });
 
 app.use(function (req, res) {
