@@ -30,7 +30,7 @@ html
             a.top.left(href="#") Link4
             a.top.left(href="#") Link5
             a.top.left(href="#") Link7
-            a.top.left(href="#") Link8
+            a.top.left(href="/logout") Logout
             a.top.right(href="/register") Sign up
             a.top.right(href="/login") Login
             br
@@ -49,4 +49,11 @@ html
                     a.top.left(href="#") Link7
                 li
                     a.top.left(href="#") Link8
-        block contents
+        div#con
+         block contents
+
+         footer(style="text-align:center;background-color:#000;color:#fff;padding-top:32px !important;padding-bottom:32px !important;")
+           h1 articles.com
+           p
+              script copyright=new Date(); update=copyright.getFullYear(); document.write("Copyright "+ update + " Articles Inc LLC All rights reserved.");
+           p Terms of Service

@@ -2,18 +2,12 @@ extends layout
 
 block contents
     h1 Login
-    br
     form(action='/login', method='post')
-        div(align="center")
-            div
-                label
-                 h1 Username:
-                input(type='text', name='username')
-            div
-                label
-                 h1 Password:
-                input(type='password', name='password')
-            div
-                br
-                input(type='submit', value='Log In')
-
+        .card
+            h2 Username:
+            input.animate-input.field(type='text', name='username')
+            h2 Password:
+            input.animate-input.field(type='password', name='password')
+            br
+            br
+            input.button(type='submit', value='Log In')

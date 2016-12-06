@@ -396,13 +396,32 @@ input::-webkit-input-placeholder{
     width:405px!important
 }
 
-.register{
-    padding-left: 33.33%;
-}
-
 @media all and (max-width:470px) {
-    .animate-input,.animate-input:focus{
-        width:90%!important;
+    .animate-input, .animate-input:focus {
+        width: 90% !important;
     }
 
+}
+
+footer > p, div.danger > p{
+    width:100%!important;
+}
+
+.danger {
+    background-color: #ffdddd;
+    border-left: 6px solid #f44336;
+    color: #f44336;
+    width: 33.33%;
+    margin-bottom: 15px;
+    padding: 1px 3px;
+    font-family: Product !important;
+}
+
+@media all and (max-width: 585px ) {
+  .danger{
+      width:85% !important;
+  }
+  footer{
+  	padding:5px;
+  }
 }

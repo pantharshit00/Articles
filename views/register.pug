@@ -1,10 +1,16 @@
 extends layout
 
-
 block contents
     div.card
-        div.register
-            h1(style="font-size:36px") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Register
+            h1(style="font-size:36px") Register
+            br
+            -function extract(err){if(errors != undefined){var message=[]; for(var i=0;i<Object.keys(err).length;i++){message[i]=err[i].msg;} return message;} else{ return 0;}}
+            -var err = extract(errors);
+              each val in err
+                div.danger
+                 p
+                   i.fa.fa-exclamation-circle
+                   span &nbsp; #{val}
             form(action="/signup" method="post")
                 h2(style="padding:3px") Name
                 input(type="text" name="name" placeholder="Name" class="animate-input field")
