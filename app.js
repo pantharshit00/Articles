@@ -113,7 +113,7 @@ app.post('/signup',function (req,res) {
     req.checkBody('password', 'Password is required').notEmpty();
     req.checkBody('password2', 'Confirm Your Password').notEmpty();
     req.checkBody('password2', 'Passwords Do not match').equals(req.body.password);
-    var emailAvailable = true;
+    var emailAvailable;
     errors = req.validationErrors();
     if (errors) {
         res.render('register', {
@@ -121,26 +121,24 @@ app.post('/signup',function (req,res) {
 
         })
         ;
-    } else if(!errors) {
+    } else if (errors === false) {
         User.findOne({
             where: {email: email}
-        }).then(function () {
-            emailAvailable = false;
-            res.status(403).render('register',{
-                errors:[{msg:"Email is alredy in use"}]
-        })})}
-
-      else if(emailAvailable){
-        connection.sync().then(function () {
-            User.create({
-                name: name,
-                email: email,
-                password: createHash(password)
-            })
+        }).then(function (user) {
+            if (user === null) {
+                User.create({
+                    name: name,
+                    email: email,
+                    password:createHash(password)
+                })
                 res.redirect('/login');
             }
-)};
-});
+            else {
+                res.render('register', {
+                    errors: [{msg: "Email is alredy in use"}]
+                })
+            }
+        })}});
 
 
 app.use(function (req, res) {
