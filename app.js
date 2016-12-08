@@ -139,12 +139,12 @@ app.post('/signup',function (req,res) {
                     email: email,
                     password:createHash(password)
                 })
-                req.flash('success_msg','You are registered and an now login.')
+                req.flash('success_msg','You are now registered and can login.')
                 res.redirect('/login');
             }
             else {
                 res.status(403).render('register', {
-                    errors: [{msg: "Email is alredy in use"}]
+                    errors: [{msg: "Email is already in use"}]
                 })
             }
         })}});
