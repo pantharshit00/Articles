@@ -22,4 +22,6 @@ block contents
                 input(type="password" name="password2" class="animate-input field" placeholder="Confirm Password")
                 br
                 br
-                input(style="padding:3px" type="submit" value="submit" class="button")
+                input(style="padding:3px" type="submit" value="submit" class="button" onclick="test()")
+            script function test() {document.getElementsByClassName('button')[0].value = "Registering...";}
+

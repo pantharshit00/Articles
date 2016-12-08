@@ -2,8 +2,8 @@ extends layout
 
 block contents
     h1 Login
-    form(action='/login', method='post')
-        .card
+    .card
+        form(action='/login', method='post')
             h2 Username:
             input.animate-input.field(type='text', name='username')
             h2 Password:

@@ -185,7 +185,6 @@ a {
 
 body {
     font: 14px "Product", Verdana, sans-serif;
-    padding: 6px;
 }
 
 div.top-nav {
@@ -194,6 +193,7 @@ div.top-nav {
     height: 34px;
     transition: all 0.1s ease-out;
     padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 a.top:visited, a.top:active, a.top:link {
@@ -403,7 +403,7 @@ input::-webkit-input-placeholder{
 
 }
 
-footer > p, div.danger > p{
+footer > p, div.danger > p,div.success > p{
     width:100%!important;
 }
 
@@ -417,11 +417,21 @@ footer > p, div.danger > p{
     font-family: Product !important;
 }
 
+.success {
+    background-color:  #ddffdd;
+    border-left: 6px solid #4CAF50;
+    color: #4CAF50;
+    width: 33.33%;
+    margin-bottom: 15px;
+    padding: 1px 3px;
+    font-family: Product !important;
+}
+
 @media all and (max-width: 585px ) {
-  .danger{
+  .danger,.success{
       width:85% !important;
   }
   footer{
-  	padding:5px;
+      padding-top: 5px;
   }
 }

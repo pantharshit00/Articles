@@ -7,6 +7,7 @@ var expressValidator = require('express-validator');
 var crypto = require('crypto')
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
+var flash = require('connect-flash')
 var Sequelize = require('sequelize');
 var connection = new Sequelize('pantharshit00', 'pantharshit00', process.env.DB_password, {
     host: 'db.imad.hasura-app.io',
@@ -46,14 +47,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 app.use(session({
-    secret: 'keyboard cat',
+    secret: 'this-is-some-random-text',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true , maxAge: 2592000000 }
-}));
+    cookie: {maxAge: 2592000000 }
+}))
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+    app.use(function (req, res, next) {
+        res.locals.success_msg = req.flash('success_msg');
+        res.locals.error_msg = req.flash('error_msg');
+        res.locals.error = req.flash('error');
+        next();
+    });
 
 
 function validatePassword(password,originalPassword){
@@ -113,14 +121,14 @@ app.post('/signup',function (req,res) {
     req.checkBody('password', 'Password is required').notEmpty();
     req.checkBody('password2', 'Confirm Your Password').notEmpty();
     req.checkBody('password2', 'Passwords Do not match').equals(req.body.password);
-    var emailAvailable;
+
     errors = req.validationErrors();
+
     if (errors) {
         res.render('register', {
             errors: errors
 
-        })
-        ;
+        });
     } else if (errors === false) {
         User.findOne({
             where: {email: email}
@@ -131,14 +139,17 @@ app.post('/signup',function (req,res) {
                     email: email,
                     password:createHash(password)
                 })
+                req.flash('success_msg','You are registered and an now login.')
                 res.redirect('/login');
             }
             else {
-                res.render('register', {
+                res.status(403).render('register', {
                     errors: [{msg: "Email is alredy in use"}]
                 })
             }
         })}});
+
+
 
 
 app.use(function (req, res) {

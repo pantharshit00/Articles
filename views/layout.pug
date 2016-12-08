@@ -49,11 +49,26 @@ html
                     a.top.left(href="#") Link7
                 li
                     a.top.left(href="#") Link8
-        div#con
-         block contents
+        div#con(style ='padding:3px')
+         -if(success_msg.length>0)
+            div.success
+                 p
+                    i.fa.fa-info-circle
+                    span &nbsp; #{success_msg}
+         -if(error_msg.length>0)
+            div.danger
+                p
+                    i.fa.fa-info-circle
+                    span &nbsp; #{error_msg}
+         -if(error.length>0)
+            div.success
+                p
+                    i.fa.fa-info-circle
+                    span &nbsp; #{error}
 
-         footer(style="text-align:center;background-color:#000;color:#fff;padding-top:32px !important;padding-bottom:32px !important;")
-           h1 articles.com
-           p
-              script copyright=new Date(); update=copyright.getFullYear(); document.write("Copyright "+ update + " Articles Inc LLC All rights reserved.");
-           p Terms of Service
+         block contents
+        footer(style="text-align:center;background-color:#000;color:#fff;padding-top:32px !important;padding-bottom:32px !important;")
+          h1 articles.com
+          p
+           script copyright=new Date(); update=copyright.getFullYear(); document.write("Copyright "+ update + " Articles Inc LLC All rights reserved.");
+          p Terms of Service
