@@ -9,7 +9,6 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var flash = require('connect-flash')
 var Sequelize = require('sequelize');
-var async = require('async');
 var nodemailer = require('nodemailer');
 var connection = new Sequelize('pantharshit00', 'pantharshit00', process.env.DB_password, {
     host: 'db.imad.hasura-app.io',
