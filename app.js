@@ -125,7 +125,7 @@ app.post('/signup',function (req,res) {
     errors = req.validationErrors();
 
     if (errors) {
-        res.render('register', {
+        res.status(403).render('register', {
             errors: errors
 
         });
@@ -148,9 +148,71 @@ app.post('/signup',function (req,res) {
                 })
             }
         })}});
+app.post('/login',
+    passport.authenticate('local', { successRedirect: '/testlogin',
+        failureRedirect: '/login',
+        failureFlash: true })
+);
 
+passport.use(new LocalStrategy(
+    function(email, password, done) {
+        User.findOne({
+            where: {
+                'email': email
+            }
+        }).then(function (user) {
+            if (user == null) {
+                return done(null, false,{message:"Username or password is invalid"})
+            }
 
+            if (validatePassword(password,user.password)) {
+                return done(null, user)
+            }
 
+            return done(null, false,{message:"Username or password is invalid"})
+        })
+    }
+))
+
+passport.serializeUser(function(user, done) {
+    done(null, user.id)
+})
+
+passport.deserializeUser(function(id, done) {
+    User.findOne({
+        where: {
+            'id': id
+        }
+    }).then(function (user) {
+        if (user == null) {
+            done(new Error('Wrong user id.'))
+        }
+
+        done(null, user)
+    })
+})
+
+function loggedIn(req, res, next) {
+    if (req.user) {
+        next();
+    } else {
+        req.flash('error_msg',"You can't access that path without logging in");
+        res.redirect('/login');
+    }
+}
+
+app.get('/testlogin',loggedIn,function (req,res) {
+    res.send(JSON.stringify({
+        data1:"foo",
+        data2:"bar"
+    }));
+})
+
+app.get('/logout', function(req, res){
+    req.logout();
+    req.flash('success_msg','You are now logged out');
+    res.redirect('/login');
+});
 
 app.use(function (req, res) {
     res.status(404).render('error', {message: "Cannot load the destination", error: "Error 404"});

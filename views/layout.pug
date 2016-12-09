@@ -58,12 +58,12 @@ html
          -if(error_msg.length>0)
             div.danger
                 p
-                    i.fa.fa-info-circle
+                    i.fa.fa-exclamation-circle
                     span &nbsp; #{error_msg}
          -if(error.length>0)
-            div.success
+            div.danger
                 p
-                    i.fa.fa-info-circle
+                    i.fa.fa-exclamation-circle
                     span &nbsp; #{error}
 
          block contents
