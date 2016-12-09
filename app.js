@@ -9,6 +9,8 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var flash = require('connect-flash')
 var Sequelize = require('sequelize');
+var async = require('async');
+var nodemailer = require('nodemailer');
 var connection = new Sequelize('pantharshit00', 'pantharshit00', process.env.DB_password, {
     host: 'db.imad.hasura-app.io',
     dialect: 'postgres'
@@ -18,7 +20,9 @@ var User = connection.define('user',{
     id:{type:Sequelize.INTEGER,autoIncrement:true, primaryKey:true},
    name: Sequelize.STRING,
     email:{ type: Sequelize.STRING , unique: true } ,
-    password:Sequelize.TEXT
+    password:Sequelize.TEXT,
+    resetPasswordToken:Sequelize.TEXT,
+    resetPasswordExpires: Sequelize.DATE
 
 });
 
@@ -30,7 +34,7 @@ connection.sync();
 
 
 
-
+var gpass= process.env.GMAIL_PASSWORD;
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -213,6 +217,107 @@ app.get('/logout', function(req, res){
     req.flash('success_msg','You are now logged out');
     res.redirect('/login');
 });
+
+app.get('/forgot', function(req, res) {
+    res.render('forgot', {
+        user: req.user
+    });
+});
+
+app.post('/forgot', function(req, res, next) {
+            var token;
+            var gpass= process.env.GMAIL_PASSWORD;
+            crypto.randomBytes(20, function(err, buf) {
+                token = buf.toString('hex');
+            });
+            User.findOne({where : {"email" : req.body.email }}).then(function(user) {
+                if (user==null) {
+                    req.flash('error', 'No account with that email address exists.');
+                    return res.redirect('/forgot');
+                }
+
+                user.resetPasswordToken = token;
+                user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+                user.save();
+                var smtpTransport = nodemailer.createTransport('SMTP',{
+                    service: 'Gmail',
+                    auth: {
+                        user: 'pantharshit00@gmail.com',
+                        pass: gpass
+                    }
+                });
+                var mailOptions = {
+                    to: req.body.email,
+                    from: 'pantharshit00@gmail.com',
+                    subject: 'Node.js Password Reset',
+                    text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                    'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                    'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                    'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+                };
+                smtpTransport.sendMail(mailOptions, function(err) {
+                    if (err) throw err;
+                    req.flash('success_msg', 'An e-mail has been sent to ' + req.body.email + ' with further instructions.');
+                    res.redirect('/forgot');
+                });
+
+            });
+});
+
+
+app.get('/reset/:token', function(req, res) {
+    User.findOne({where:{ 'resetPasswordToken': req.params.token, 'resetPasswordExpires': { $gt: Date.now() } }}).then(function(user) {
+        if (user==null) {
+            req.flash('error', 'Password reset token is invalid or has expired.');
+            return res.redirect('/forgot');
+        }
+        res.render('reset', {
+            user: req.user
+        });
+    });
+});
+
+app.post('/reset/:token', function(req, res) {
+    var password = req.body.password;
+    var confirm = req.body.confirm;
+    req.checkBody('password', 'Password is required').notEmpty();
+    req.checkBody('confirm', 'Confirm Your Password').notEmpty();
+    req.checkBody('confirm', 'Passwords Do not match').equals(req.body.password);
+
+    errors = req.validationErrors();
+    console.log(errors);
+    if (errors) {
+        req.flash('error','Password do not match or not provided. TRY AGAIN');
+        res.status(403).redirect('/reset/'+req.params.token);
+    }
+    else {
+        User.findOne({where:{
+            resetPasswordToken: req.params.token,
+            resetPasswordExpires: {$gt: Date.now()}
+        }}).then(function (user) {
+            if (user == null) {
+                req.flash('error', 'Password reset token is invalid or has expired.');
+                return res.redirect('back');
+            }
+            var newCred = {
+                password: createHash(req.body.password),
+                resetPasswordToken: null,
+                resetPasswordExpires: null
+            }
+
+            User.update(newCred, {where: {'email': user.email}}).then(function () {
+                req.flash('success_msg', 'Password has been changed')
+                res.redirect('/login');
+            }, function (err) {
+                if (err) throw err;
+            });
+
+        });
+    }
+
+});
+
 
 app.use(function (req, res) {
     res.status(404).render('error', {message: "Cannot load the destination", error: "Error 404"});
