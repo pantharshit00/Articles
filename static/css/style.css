@@ -427,6 +427,7 @@ footer > p, div.danger > p,div.success > p{
     font-family: Product !important;
 }
 
+
 @media all and (max-width: 585px ) {
   .danger,.success{
       width:85% !important;
@@ -434,4 +435,10 @@ footer > p, div.danger > p,div.success > p{
   footer{
       padding-top: 5px;
   }
+}
+
+@media all and (max-width: 380px ) {
+    .for{
+        padding-left: 60px !important;
+    }
 }

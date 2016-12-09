@@ -63,6 +63,7 @@ app.use(passport.session());
         res.locals.success_msg = req.flash('success_msg');
         res.locals.error_msg = req.flash('error_msg');
         res.locals.error = req.flash('error');
+        res.locals.userCheck = req.user || null;
         next();
     });
 
@@ -152,7 +153,7 @@ app.post('/signup',function (req,res) {
             }
         })}});
 app.post('/login',
-    passport.authenticate('local', { successRedirect: '/testlogin',
+    passport.authenticate('local', { successRedirect: '/',
         failureRedirect: '/login',
         failureFlash: true })
 );

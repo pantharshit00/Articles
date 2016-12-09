@@ -30,9 +30,12 @@ html
             a.top.left(href="#") Link4
             a.top.left(href="#") Link5
             a.top.left(href="#") Link7
-            a.top.left(href="/logout") Logout
-            a.top.right(href="/register") Sign up
-            a.top.right(href="/login") Login
+            a.top.left(href="#") Link8
+            -if(userCheck==null)
+                a.top.right(href="/register") Sign up
+                a.top.right(href="/login") Login
+            -if(userCheck!=null)
+                a.top.right(href="/logout") Logout
             br
             ul.men
                 li
