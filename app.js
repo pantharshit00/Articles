@@ -225,6 +225,13 @@ app.get('/forgot', function(req, res) {
 });
 
 app.post('/forgot', function(req, res, next) {
+            var email = req.body.email;
+            req.checkBody('email','Email field is empty').notEmpty();
+            errors = req.validationErrors();
+            if (errors) {
+                req.flash('error','Email field is empty');
+                res.status(403).redirect('/forgot');
+            }
             var token;
             var gpass= process.env.GMAIL_PASSWORD;
             crypto.randomBytes(20, function(err, buf) {
@@ -243,14 +250,14 @@ app.post('/forgot', function(req, res, next) {
                 var smtpTransport = nodemailer.createTransport('SMTP',{
                     service: 'Gmail',
                     auth: {
-                        user: 'pantharshit00@gmail.com',
+                        user: 'artclesinc@gmail.com',
                         pass: gpass
                     }
                 });
                 var mailOptions = {
                     to: req.body.email,
-                    from: 'pantharshit00@gmail.com',
-                    subject: 'Node.js Password Reset',
+                    from: 'artclesinc@gmail.com',
+                    subject: 'Articles Password Reset',
                     text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                     'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
                     'http://' + req.headers.host + '/reset/' + token + '\n\n' +
@@ -286,7 +293,6 @@ app.post('/reset/:token', function(req, res) {
     req.checkBody('confirm', 'Passwords Do not match').equals(req.body.password);
 
     errors = req.validationErrors();
-    console.log(errors);
     if (errors) {
         req.flash('error','Password do not match or not provided. TRY AGAIN');
         res.status(403).redirect('/reset/'+req.params.token);
