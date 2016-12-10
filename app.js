@@ -329,7 +329,7 @@ app.use(function (req, res) {
     res.status(404).render('error', {message: "Cannot load the destination", error: "Error 404"});
 });
 
-app.listen(8080, function () {
+app.listen(app.get('port'), function () {
     console.log("app started");
 });
 
