@@ -1,7 +1,10 @@
 extends layout
 block contents
-    h1 Hello #{name}
+    h1.long Hello #{user.name}
     br
-    p This website is under construction so wait till whole thing arrives.
-    br
-    h3 THANKING YOU , HARSHIT PANT
+    .card.card-small(style="border-radius:5px;box-shadow: 0 10px 18px 0 rgba(0, 0, 0, 0.2);")
+        h3 Email : #{user.email}
+        h3
+          a(href="#") Change Password
+        h3
+            a(href="#") Delete Account

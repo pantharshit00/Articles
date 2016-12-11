@@ -318,7 +318,7 @@ app.post('/reset/:token', function(req, res) {
 });
 
 app.get('/user/dashboard',loggedIn,function(req,res){
-    res.render('dashboard',{name: req.user.name,title: "Dashboard | Articles"})
+    res.render('dashboard',{user: req.user,title: "Dashboard | Articles"})
 })
 
 app.use(function (req, res) {
