@@ -153,7 +153,7 @@ app.post('/signup',function (req,res) {
             }
         })}});
 app.post('/login',
-    passport.authenticate('local', { successRedirect: '/',
+    passport.authenticate('local', { successRedirect: '/user/dashboard',
         failureRedirect: '/login',
         failureFlash: true })
 );
@@ -205,13 +205,6 @@ function loggedIn(req, res, next) {
     }
 }
 
-app.get('/testlogin',loggedIn,function (req,res) {
-    res.send(JSON.stringify({
-        data1:"foo",
-        data2:"bar"
-    }));
-})
-
 app.get('/logout', function(req, res){
     req.logout();
     req.flash('success_msg','You are now logged out');
@@ -220,7 +213,7 @@ app.get('/logout', function(req, res){
 
 app.get('/forgot', function(req, res) {
     res.render('forgot', {
-        user: req.user
+        user: req.user,title: "Reset Password | Articles"
     });
 });
 
@@ -280,7 +273,7 @@ app.get('/reset/:token', function(req, res) {
             return res.redirect('/forgot');
         }
         res.render('reset', {
-            user: req.user
+            user: req.user,title: "Reset Password | Articles"
         });
     });
 });
@@ -324,6 +317,9 @@ app.post('/reset/:token', function(req, res) {
 
 });
 
+app.get('/user/dashboard',loggedIn,function(req,res){
+    res.render('dashboard',{name: req.user.name,title: "Dashboard | Articles"})
+})
 
 app.use(function (req, res) {
     res.status(404).render('error', {message: "Cannot load the destination", error: "Error 404"});
