@@ -1,5 +1,5 @@
 var express = require('express');
-var morgan = require('morgan');
+var morgan = require("morgan");
 var path = require('path');
 var pug = require('pug');
 var bodyParser = require('body-parser');
@@ -17,6 +17,7 @@ var connection = new Sequelize('pantharshit00', 'pantharshit00', process.env.DB_
 
 var User = connection.define('user',{
     id:{type:Sequelize.INTEGER,autoIncrement:true, primaryKey:true},
+    googleId:Sequelize.TEXT,
    name: Sequelize.STRING,
     email:{ type: Sequelize.STRING , unique: true } ,
     password:Sequelize.TEXT,
@@ -37,7 +38,7 @@ var gpass= process.env.GMAIL_PASSWORD;
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 var app = express();
 
@@ -64,6 +65,7 @@ app.use(passport.session());
         res.locals.error_msg = req.flash('error_msg');
         res.locals.error = req.flash('error');
         res.locals.userCheck = req.user || null;
+        res.locals.gCheck = glogin;
         next();
     });
 
@@ -177,6 +179,40 @@ passport.use(new LocalStrategy(
         })
     }
 ))
+
+var glogin = false;
+
+passport.use(new GoogleStrategy({
+        clientID: '8802749170-i0qa9e8u707466v46ncu355rd62v81n3.apps.googleusercontent.com',
+        clientSecret: 'q1DFDHp5jONqz3TEFa02yZeO',
+        callbackURL: "http://localhost:8080/api/google/callback"
+    },
+    function(accessToken, refreshToken, profile, cb) {
+        User.findOrCreate(
+            {where:{ googleId: profile.id },
+                defaults:{
+                    name:profile.displayName,
+                    email:profile.emails[0].value,
+                    password:accessToken}})
+            .spread(function(user,created){
+             glogin = true;
+            return cb(null,user);
+        });
+    }
+));
+
+app.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile','email'] }));
+
+app.get('/api/google/callback',
+    passport.authenticate('google',
+        { failureRedirect: '/login',
+            successRedirect: '/user/dashboard',
+            failureFlash:true
+        }
+     )
+    );
+
 
 passport.serializeUser(function(user, done) {
     done(null, user.id)
@@ -320,6 +356,24 @@ app.post('/reset/:token', function(req, res) {
 app.get('/user/dashboard',loggedIn,function(req,res){
     res.render('dashboard',{user: req.user,title: "Dashboard | Articles"})
 })
+
+app.get('/user/dashboard/delete_account',loggedIn,function(req,res){
+   res.render('delete',{title: 'Delete Account | Articles'});
+});
+
+app.post('/user/dashboard/delete_account/confirm',loggedIn,function(req,res){
+    User.findOne({where:{email: req.user.email}}).then(function(user){
+       if(validatePassword(req.body.password,req.user.password)) {
+           req.logout();
+           user.destroy();
+           req.flash('success_msg', 'Your account has been successfully deleted')
+           res.redirect('/register')
+       }else{
+           req.flash('error','Password is invaild')
+           res.redirect('back')
+       }
+    })
+});
 
 app.use(function (req, res) {
     res.status(404).render('error', {message: "Cannot load the destination", error: "Error 404"});

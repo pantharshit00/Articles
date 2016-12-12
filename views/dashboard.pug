@@ -4,7 +4,8 @@ block contents
     br
     .card.card-small(style="border-radius:5px;box-shadow: 0 10px 18px 0 rgba(0, 0, 0, 0.2);")
         h3 Email : #{user.email}
-        h3
-          a(href="#") Change Password
-        h3
-            a(href="#") Delete Account
+        -if(gCheck === false)
+          h3
+            a(href="#") Change Password
+          h3
+            a(href="/user/dashboard/delete_account") Delete Account

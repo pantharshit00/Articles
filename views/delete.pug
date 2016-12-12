@@ -1,0 +1,9 @@
+extends layout
+block contents
+  .card
+    form(action="/user/dashboard/delete_account/confirm" method='post')
+        h2 Confirm Your Password:
+        input.animate-input.field(type='password', name='password')
+        br
+        br
+        input.button(type='submit', value='Confirm')
