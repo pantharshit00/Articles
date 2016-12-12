@@ -160,6 +160,8 @@ app.post('/login',
         failureFlash: true })
 );
 
+var glogin = false;
+
 passport.use(new LocalStrategy(
     function(email, password, done) {
         User.findOne({
@@ -172,6 +174,7 @@ passport.use(new LocalStrategy(
             }
 
             if (validatePassword(password,user.password)) {
+                glogin= false;
                 return done(null, user)
             }
 
@@ -180,7 +183,7 @@ passport.use(new LocalStrategy(
     }
 ))
 
-var glogin = false;
+
 
 passport.use(new GoogleStrategy({
         clientID: '8802749170-i0qa9e8u707466v46ncu355rd62v81n3.apps.googleusercontent.com',
