@@ -191,18 +191,28 @@ passport.use(new GoogleStrategy({
         callbackURL: "http://localhost:8080/api/google/callback"
     },
     function(accessToken, refreshToken, profile, cb) {
-        User.findOrCreate(
-            {where:{ googleId: profile.id },
-                defaults:{
-                    name:profile.displayName,
-                    email:profile.emails[0].value,
-                    password:accessToken}})
-            .spread(function(user,created){
-             glogin = true;
-            return cb(null,user);
-        });
-    }
-));
+        User.findOne({where: {email: profile.emails[0].value}}).then(function (user) {
+            if (user === null || user.googleId != null ) {
+                User.findOrCreate(
+                    {
+                        where: {googleId: profile.id},
+                        defaults: {
+                            name: profile.displayName,
+                            email: profile.emails[0].value,
+                            password: accessToken
+                        }
+                    })
+                    .spread(function (user, created) {
+                        glogin = true;
+                        return cb(null, user);
+                    });
+            }
+            else{
+                return cb(null, false,{message:"Already used that email with a local account. Sign in with that."})
+            }
+        })
+
+    }));
 
 app.get('/auth/google',
     passport.authenticate('google', { scope: ['profile','email'] }));

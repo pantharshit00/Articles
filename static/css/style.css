@@ -227,7 +227,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a.logo {
-    font-family: test;
     font-size: 46px;
     text-decoration: inherit;
     color: black;
@@ -235,10 +234,6 @@ a.logo {
     display: block;
 }
 
-@font-face {
-    font-family: test;
-    src: url('/static/fonts/cour.ttf') format('truetype');
-}
 
 @font-face {
     font-family: Product;
