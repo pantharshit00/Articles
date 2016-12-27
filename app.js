@@ -18,6 +18,7 @@ var connection = new Sequelize('pantharshit00', 'pantharshit00', process.env.DB_
 var User = connection.define('user',{
     id:{type:Sequelize.INTEGER,autoIncrement:true, primaryKey:true},
     googleId:Sequelize.TEXT,
+    facebookId:Sequelize.TEXT,
    name: Sequelize.STRING,
     email:{ type: Sequelize.STRING , unique: true } ,
     password:Sequelize.TEXT,
@@ -39,7 +40,7 @@ var gpass= process.env.GMAIL_PASSWORD;
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
-
+var FacebookStrategy = require('passport-facebook').Strategy;
 var app = express();
 
 
@@ -188,7 +189,7 @@ passport.use(new LocalStrategy(
 passport.use(new GoogleStrategy({
         clientID: '8802749170-i0qa9e8u707466v46ncu355rd62v81n3.apps.googleusercontent.com',
         clientSecret: 'q1DFDHp5jONqz3TEFa02yZeO',
-        callbackURL: "http://localhost:8080/api/google/callback"
+        callbackURL: "http://52.53.223.175/api/google/callback"
     },
     function(accessToken, refreshToken, profile, cb) {
         User.findOne({where: {email: profile.emails[0].value}}).then(function (user) {
@@ -214,6 +215,41 @@ passport.use(new GoogleStrategy({
 
     }));
 
+
+passport.use(new FacebookStrategy({
+        clientID: '641408222710575',
+        clientSecret: 'db4546aca1add42b0af07c7554e91db1',
+        callbackURL: "http://52.53.223.175/api/facebook/callback",
+        profileFields: ['id', 'emails', 'name']
+    },
+    function(accessToken, refreshToken, profile, cb) {
+        User.findOne({where: {email: profile.emails[0].value}}).then(function (user) {
+            if (user === null || user.facebookId != null ) {
+                User.findOrCreate(
+                    {
+                        where: {facebookId: profile.id},
+                        defaults: {
+                            name: profile.name.givenName+' '+profile.name.familyName,
+                            email: profile.emails[0].value,
+                            password: accessToken
+                        }
+                    })
+                    .spread(function (user, created) {
+                        glogin = true;
+                        return cb(null, user);
+                    });
+            }
+            else{
+                return cb(null, false,{message:"Already used that email with a local account. Sign in with that."})
+            }
+        })
+
+    }));
+
+
+
+
+
 app.get('/auth/google',
     passport.authenticate('google', { scope: ['profile','email'] }));
 
@@ -225,6 +261,19 @@ app.get('/api/google/callback',
         }
      )
     );
+
+app.get('/auth/facebook',
+    passport.authenticate('facebook', { scope: ['public_profile','email'] }));
+
+app.get('/api/facebook/callback',
+    passport.authenticate('facebook',
+        { failureRedirect: '/login',
+            successRedirect: '/user/dashboard',
+            failureFlash:true
+        }
+    )
+);
+
 
 
 passport.serializeUser(function(user, done) {
@@ -387,6 +436,7 @@ app.post('/user/dashboard/delete_account/confirm',loggedIn,function(req,res){
        }
     })
 });
+
 
 app.use(function (req, res) {
     res.status(404).render('error', {message: "Cannot load the destination", error: "Error 404"});

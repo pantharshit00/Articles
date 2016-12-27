@@ -435,8 +435,21 @@ footer > p, div.danger > p,div.success > p{
   }
 }
 
+a.fb{
+    padding-left: 120px !important;
+}
+
 @media all and (max-width: 380px ) {
     .for{
+        padding-left: 60px !important;
+    }
+}
+
+@media (max-width: 290px) {
+    .for {
+        padding-left: 10px !important;
+    }
+    a.fb{
         padding-left: 60px !important;
     }
 }
